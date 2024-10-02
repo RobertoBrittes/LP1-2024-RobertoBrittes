@@ -1,13 +1,14 @@
 import java.util.Scanner;
 
 public class MediaPonderada {
-    
+
     final static Scanner Sc = new Scanner(System.in);
+
     public static void main(String[] args) {
         int qtdAlunos = lerNumInt();
-        final int peso1 = 2;
-        final int peso2 = 3;
-        final int peso3 = 5;
+        final int PESO_1 = 2;
+        final int PESO_2 = 3;
+        final int PESO_3 = 5;
         float nota1 = 0f;
         float nota2 = 0f;
         float nota3 = 0f;
@@ -17,13 +18,15 @@ public class MediaPonderada {
             nota1 = lerNumFloat();
             nota2 = lerNumFloat();
             nota3 = lerNumFloat();
-            media = calcularMedia(peso1, peso2, peso3, nota1, nota2, nota3);
+            media = calcularMedia(PESO_1, PESO_2, PESO_3, nota1, nota2, nota3);
+            System.out.printf("%.1f\n", media);
         }
     }
 
-    public static float calcularMedia(int peso1, int peso2, int peso3, float nota1, float nota2, float nota3) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'calcularMedia'");
+    public static float calcularMedia(int PESO_1, int PESO_2, int PESO_3, float nota1, float nota2, float nota3) {
+        float media = 0f;
+        media = ((nota1 * PESO_1) + (nota2 * PESO_2) + (nota3 * PESO_3)) / (PESO_1 + PESO_2 + PESO_3);
+        return media;
     }
 
     public static float lerNumFloat() {
