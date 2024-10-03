@@ -3,12 +3,16 @@ public class Bee_1097 {
         imprimirSequencia();
     }
 
-    public static void imprimirSequencia(){
-        while (condition) {
-            
-            for (int j = 0; j >= (j-2); j++) {
+    public static void imprimirSequencia() {
+        int i = 1;
+        int j = 7;
+        while (i < 10) {
+            for (int k = 0; k < 3; k++) {
                 System.out.println("I=" + i + " J=" + j);
+                j--;
             }
+            j += 5;
+            i += 2;
         }
     }
 }
