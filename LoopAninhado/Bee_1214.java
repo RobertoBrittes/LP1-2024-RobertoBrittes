@@ -5,8 +5,8 @@ public class Bee_1214 {
 
     public static void main(String[] args) {
         int qtdTestes = lerNumInt();
-        float mediaTurma = 0;
-        float percentualAcimaMedia = 0f;
+        double mediaTurma = 0;
+        double percentualAcimaMedia = 0f;
         int qtdAcimaMedia = 0;
         int qtdPessoasTurma = 0;
         int soma = 0;
@@ -22,11 +22,11 @@ public class Bee_1214 {
             mediaTurma = calcularMediaTurma(soma, qtdPessoasTurma);
             qtdAcimaMedia = verificarAcimaMedia(nota, mediaTurma);
             percentualAcimaMedia = calcularpercentualAcimaMedia(qtdPessoasTurma, qtdAcimaMedia);
-            System.out.printf("%.3f %s\n", percentualAcimaMedia, "%");
+            System.out.printf("%.3f%s\n", percentualAcimaMedia, "%");
         }
     }
 
-    public static int verificarAcimaMedia(int[] nota, float mediaTurma) {
+    public static int verificarAcimaMedia(int[] nota, double mediaTurma) {
         int qtdAcimaMedia = 0;
         for (int i = 0; i < nota.length; i++) {
             if (nota[i] > mediaTurma) {
@@ -36,15 +36,15 @@ public class Bee_1214 {
         return qtdAcimaMedia;
     }
 
-    public static float calcularMediaTurma(int soma, int qtdPessoasTurma) {
-        float mediaTurma = 0f;
-        mediaTurma = (float)soma/qtdPessoasTurma;
+    public static double calcularMediaTurma(int soma, int qtdPessoasTurma) {
+        double mediaTurma = 0f;
+        mediaTurma = (double)soma/qtdPessoasTurma;
         return mediaTurma;
     }
     
-    public static float calcularpercentualAcimaMedia(int qtdPessoasTurma, int qtdAcimaMedia) {
-        float percentualAcimaMedia = 0f;
-        percentualAcimaMedia = (float)(qtdPessoasTurma/qtdAcimaMedia)*100;
+    public static double calcularpercentualAcimaMedia(int qtdPessoasTurma, int qtdAcimaMedia) {
+        double percentualAcimaMedia = 0f;
+        percentualAcimaMedia = (qtdAcimaMedia/(double)qtdPessoasTurma) * 100;
         return percentualAcimaMedia;
     }
 
