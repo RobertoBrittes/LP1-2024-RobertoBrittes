@@ -25,6 +25,14 @@ public class ex1_vetor {
 
     }
 
+    public static int encontrarMaiorNota(int[] vetorNotas) {
+        int maiorNota = vetorNotas[0];
+        for (int i = 1; i < vetorNotas.length; i++) {
+            maiorNota = Math.max(maiorNota, vetorNotas[i]);
+        }
+        return maiorNota;
+    }
+
     public static void imprimir(String string) {
         System.out.println(string);
     }
