@@ -5,7 +5,7 @@ public class RobertoBrittes_7848_Media {
     final static Scanner Sc = new Scanner(System.in);
     public static void main(String[] args) {
         //inicialização de variaveis
-        final float media = 75.548f;
+        final float media = 75.548f;                    // constante deve ser MAIÚSCULO
         float percentualAcimaMedia = 0;
         int qtdAcimaMedia = 0;
         int qtdPessoasTurma = 0;
@@ -14,7 +14,7 @@ public class RobertoBrittes_7848_Media {
         boolean acimaMedia = false;
 
         do {
-            qtdTestes = lerNumInt();       //entrada da qtd de testes
+            qtdTestes = lerNumInt();       //entrada da qtd de testes 
         } while (qtdTestes <= 0 || qtdTestes > 1000);
         
         for (int i = 0; i < qtdTestes; i++) {
@@ -62,3 +62,8 @@ public class RobertoBrittes_7848_Media {
         return percentualAcimaMedia;
     }
 }
+/* Conceito A
+ * 
+ * Validar as entradas nos métodos que lê as variáveis.
+ * 
+ */

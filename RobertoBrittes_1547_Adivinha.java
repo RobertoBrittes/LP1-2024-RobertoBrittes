@@ -2,6 +2,7 @@
 import java.util.Scanner;
 
 public class RobertoBrittes_1547_Adivinha {
+    
     final static Scanner Sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -68,3 +69,8 @@ public class RobertoBrittes_1547_Adivinha {
         return valor;
     }
 }
+/*
+ * Conceito A
+ * 
+ * 
+ */
