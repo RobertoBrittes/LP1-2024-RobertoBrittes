@@ -10,6 +10,10 @@ public class ex1_vetor {
 
         int n = 0;
         float media = 0f;
+        float maiorNota = 0f;
+        int indiceMaiorNota = 0;
+        float menorNota = 0f;
+        int indiceMenorNota = 0;
 
         n = lerN();
 
@@ -21,7 +25,17 @@ public class ex1_vetor {
 
         media = calcularMedia(vetorNotas);
 
+        maiorNota = encontrarMaiorNota(vetorNotas);
+        indiceMaiorNota = encontrarIndiceMaiorNota(vetorNotas, maiorNota);
+
+        menorNota = encontrarMenorNota(vetorNotas);
+        indiceMenorNota = encontrarIndiceMenorNota(vetorNotas, indiceMenorNota);
+
         imprimir(media + "");
+        imprimir(maiorNota + "");
+        imprimir(indiceMaiorNota + "");
+        imprimir(menorNota + "");
+        imprimir(indiceMenorNota + "");
 
     }
 
@@ -31,6 +45,36 @@ public class ex1_vetor {
             maiorNota = Math.max(maiorNota, vetorNotas[i]);
         }
         return maiorNota;
+    }
+
+    public static int encontrarIndiceMaiorNota(int[] vetorNotas, float maiorNota) {
+        int indiceMaiorNota = 0;
+        for (int i = 1; i < vetorNotas.length; i++) {
+            if (vetorNotas[i] == maiorNota) {
+                indiceMaiorNota = i;
+                break;
+            }
+        }
+        return indiceMaiorNota;
+    }
+
+    public static int encontrarMenorNota(int[] vetorNotas) {
+        int menorNota = vetorNotas[0];
+        for (int i = 1; i < vetorNotas.length; i++) {
+            menorNota = Math.min(menorNota, vetorNotas[i]);
+        }
+        return menorNota;
+    }
+
+    public static int encontrarIndiceMenorNota(int[] vetorNotas, float menorNota) {
+        int indiceMenorNota = 0;
+        for (int i = 1; i < vetorNotas.length; i++) {
+            if (vetorNotas[i] == menorNota) {
+                indiceMenorNota = i;
+                break;
+            }
+        }
+        return indiceMenorNota;
     }
 
     public static void imprimir(String string) {
@@ -49,7 +93,7 @@ public class ex1_vetor {
         float media = 0f;
         int soma = 0;
         soma = somarNotas(vetorNotas);
-        media = soma/(float)vetorNotas.length;
+        media = soma / (float) vetorNotas.length;
         return media;
     }
 
