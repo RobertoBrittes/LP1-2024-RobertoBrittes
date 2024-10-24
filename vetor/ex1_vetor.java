@@ -17,7 +17,7 @@ public class ex1_vetor {
 
         n = lerN();
 
-        int[] vetorNotas = new int[n];
+        int[] vetorNotas = criarVetor(n);
 
         vetorNotas = lerNotas(vetorNotas);
 
@@ -37,6 +37,11 @@ public class ex1_vetor {
         imprimir(menorNota + "");
         imprimir(indiceMenorNota + "");
 
+    }
+
+    public static int[] criarVetor(int n) {
+        int[] vetorNotas = new int[n];
+        return vetorNotas;
     }
 
     public static int encontrarMaiorNota(int[] vetorNotas) {
