@@ -8,17 +8,27 @@ public class ex2_vetor {
     public static void main(String[] args) {
         int n = lerNumInt();
         int[] numeros = criarVetorInt(n);
-        int[] qtdParImpar = criarVetorInt(2);
-
+        
         numeros = lerVetor(numeros);
         boolean[] ehPar = criarVetorBool(n);
+        ehPar = verificarParImpar(numeros, ehPar);
+        
+        int[] qtdParImpar = criarVetorInt(2);
+        qtdParImpar = verificarQtdParImpar(numeros, ehPar, qtdParImpar);
 
-        qtdParImpar = verificarQtdParImpar(n, numeros, ehPar, qtdParImpar);
+        imprimirParImpar(qtdParImpar);
 
     }
 
-    public static int[] verificarQtdParImpar(int n, int[] numeros, boolean[] ehPar, int[] qtdParImpar) {
-    
+    private static void imprimirParImpar(int[] qtdParImpar) {
+        for (int i = 0; i < qtdParImpar.length; i++) {
+            System.out.print(qtdParImpar[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static int[] verificarQtdParImpar(int[] numeros, boolean[] ehPar, int[] qtdParImpar) {
+        //index 0 é par, index 1 é impar
         for (int i = 0; i < numeros.length; i++) {
             if (ehPar[i] == true) {
                 qtdParImpar[0]++;
@@ -29,10 +39,12 @@ public class ex2_vetor {
         return qtdParImpar;
     }
 
-    public static boolean[] verificarParImpar (int[] numeros, int n, boolean[] ehPar) {
+    public static boolean[] verificarParImpar(int[] numeros, boolean[] ehPar) {
         for (int i = 0; i < numeros.length; i++) {
             if (numeros[i] % 2 == 0) {
                 ehPar[i] = true;
+            } else {
+                ehPar[i] = false;
             }
         }
         return ehPar;
@@ -45,7 +57,7 @@ public class ex2_vetor {
 
     public static int lerNumInt() {
         int n = 0;
-        do { 
+        do {
             n = Sc.nextInt();
         } while (n < 1 || n > 50);
         return n;
