@@ -21,6 +21,9 @@ public class Ex4_vetor {
         vet1 = lerVet(vet1);
         vet2 = lerVet(vet2);
 
+        imprimirVetInt(vet1);
+        imprimirVetInt(vet2);
+
         vet3 = concatenarVetores(vet1, vet2, vet3);
 
         imprimirVetInt(vet3);
@@ -30,6 +33,8 @@ public class Ex4_vetor {
         imprimirVetInt(vetEntrelacado);
 
         vetInvertido = inverterVet(vet1, vetInvertido);
+
+        imprimirVetInt(vetInvertido);
 
         pX = lerNumInt();
         pY = lerNumInt();
