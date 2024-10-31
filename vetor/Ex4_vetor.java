@@ -45,9 +45,12 @@ public class Ex4_vetor {
     }
 
     public static int[] trocarPosVet(int[] vet1, int pX, int pY) {
-        int valorIndicePX = vet1[pX];
-        vet1[pX] = vet1[pY];
-        vet1[pY] = valorIndicePX;
+        int valorIndicePX = 0;
+        if (pX > 0 && pY > 0 && pX < vet1.length && pY < vet1.length && pX != pY) {
+            valorIndicePX = vet1[pX];
+            vet1[pX] = vet1[pY];
+            vet1[pY] = valorIndicePX;
+        }
         return vet1;
     }
 
