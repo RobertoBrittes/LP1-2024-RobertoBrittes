@@ -1,5 +1,4 @@
 
-
 import java.util.Random;
 import java.util.Scanner;
 
@@ -20,9 +19,9 @@ public class Ex01_Matriz {
 
         int[][] matriz = criarMatriz(n, m);
 
-        //matriz = inicializarMatriz(matriz, k);
+        // matriz = inicializarMatriz(matriz, k);
         matriz = gerarMatriz(matriz);
-        //matriz = lerMatriz(matriz);
+        // matriz = lerMatriz(matriz);
 
         imprimirMatriz(matriz);
         somaMatriz = somarMatriz(matriz);
@@ -38,21 +37,6 @@ public class Ex01_Matriz {
         imprimir("Maior: " + maiorElemento + " Posição: " + posMaiorElemento[0] + " " + posMaiorElemento[1]);
         imprimir("Menor: " + menorElemento + " Posição: " + posMenorElemento[0] + " " + posMenorElemento[1]);
 
-    }
-
-    public static int[] encontrarPosMaiorElemento(int[][] matriz, int maiorElemento, int[] posMaiorElemento) {
-        posMaiorElemento[0] = 0;
-        posMaiorElemento[1] = 0;
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[0].length; j++) {
-                if (maiorElemento == matriz[i][j]) {
-                    posMaiorElemento[0] = i;
-                    posMaiorElemento[1] = j;
-                    break;
-                }
-            }
-        }
-        return posMaiorElemento;
     }
 
     public static int[] encontrarPosMenorElemento(int[][] matriz, int menorElemento, int[] posMenorElemento) {
@@ -72,6 +56,21 @@ public class Ex01_Matriz {
 
     public static int[] criarVetorInt(int n) {
         return new int[n];
+    }
+
+    public static int[] encontrarPosMaiorElemento(int[][] matriz, int maiorElemento, int[] posMaiorElemento) {
+        posMaiorElemento[0] = 0;
+        posMaiorElemento[1] = 0;
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[0].length; j++) {
+                if (maiorElemento == matriz[i][j]) {
+                    posMaiorElemento[0] = i;
+                    posMaiorElemento[1] = j;
+                    break;
+                }
+            }
+        }
+        return posMaiorElemento;
     }
 
     public static int encontrarMaiorElemento(int[][] matriz) {
@@ -99,7 +98,7 @@ public class Ex01_Matriz {
     }
 
     public static float calcularMedia(int somaMatriz, int[][] matriz) {
-        return (float)somaMatriz/(matriz.length * matriz[0].length);
+        return (float) somaMatriz / (matriz.length * matriz[0].length);
     }
 
     public static int somarMatriz(int[][] matriz) {
@@ -111,21 +110,23 @@ public class Ex01_Matriz {
         }
         return somaMatriz;
     }
-    
+
     public static void imprimirMatriz(int[][] matriz) {
-        /*System.out.println();
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[0].length; j++) {
-                if (matriz[i][j] == 1) {
-                    System.out.print("*");
-                } else {
-                    System.out.print(" ");
-                }
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
-        System.out.println();*/
+        /*
+         * System.out.println();
+         * for (int i = 0; i < matriz.length; i++) {
+         * for (int j = 0; j < matriz[0].length; j++) {
+         * if (matriz[i][j] == 1) {
+         * System.out.print("*");
+         * } else {
+         * System.out.print(" ");
+         * }
+         * System.out.print(" ");
+         * }
+         * System.out.println();
+         * }
+         * System.out.println();
+         */
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
                 System.out.print(matriz[i][j] + " ");
@@ -133,7 +134,7 @@ public class Ex01_Matriz {
             System.out.println();
         }
     }
-    
+
     public static int[][] gerarMatriz(int[][] matriz) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
@@ -151,6 +152,7 @@ public class Ex01_Matriz {
         }
         return matriz;
     }
+
     public static int[][] inicializarMatriz(int[][] matriz, int k) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[0].length; j++) {
@@ -167,6 +169,7 @@ public class Ex01_Matriz {
     public static void imprimir(String msg) {
         System.out.println(msg);
     }
+
     public static int lerNumInt() {
         return Sc.nextInt();
     }

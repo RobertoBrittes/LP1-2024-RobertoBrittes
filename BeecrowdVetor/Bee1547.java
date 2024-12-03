@@ -1,4 +1,4 @@
-package BeeccrowdVetor;
+package BeecrowdVetor;
 
 import java.util.Scanner;
 
