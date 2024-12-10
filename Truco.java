@@ -18,8 +18,9 @@ public class Truco {
         boolean[][] cartasBaralho = criarMatrizBool(10, 4);
         cartasBaralho = incicializarMatriz(cartasBaralho, true);
 
+        int[][] cartaVira = criarMatrizInt(1, 2);
+
         int[] cartaFazendo = criarVetorInt(2);
-        int[] cartaVira = criarVetorInt(2);
 
         while (pontuacaoJog < 12 || pontuacaoPc < 12) {
             cartasJog = distribuirCartas(cartasJog, cartasBaralho);
@@ -34,16 +35,18 @@ public class Truco {
             cartasPc2 = distribuirCartas(cartasPc2, cartasBaralho);
             cartasBaralho = marcarCartasDistribuidas(cartasPc2, cartasBaralho);
 
+            // vira a carta para definir os manilhas;
             cartaVira = virarCarta(cartaVira, cartasBaralho);
-            
+            cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
+
         }
     }
 
-    public static int[] virarCarta(int[] cartaVira, boolean[][] cartasBaralho) {
+    public static int[][] virarCarta(int[][] cartaVira, boolean[][] cartasBaralho) {
         do {
-            cartaVira[0] = rand.nextInt(10);
-            cartaVira[1] = rand.nextInt(4);
-        } while (!cartasBaralho[cartaVira[0]][cartaVira[1]]);
+            cartaVira[0][0] = rand.nextInt(10);
+            cartaVira[0][1] = rand.nextInt(4);
+        } while (!cartasBaralho[cartaVira[0][0]][cartaVira[0][1]]);
         return cartaVira;
     }
 
