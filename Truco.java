@@ -9,6 +9,8 @@ public class Truco {
         int pontuacaoJog = 0;
         int pontuacaoPc = 0;
 
+    
+
         int[][] cartasJog = criarMatrizInt(3, 2);
         int[][] cartasDuo = criarMatrizInt(3, 2);
 
@@ -22,7 +24,19 @@ public class Truco {
 
         int[] cartaFazendo = criarVetorInt(2);
 
-        while (pontuacaoJog < 12 || pontuacaoPc < 12) {
+        setColor(1);
+        System.out.println("┌────────────────────────────────────────────┐\n" + //
+                           "│ ████████╗██████╗ ██╗   ██╗ ██████╗ ██████╗ │\n" + //
+                           "│ ╚══██╔══╝██╔══██╗██║   ██║██╔════╝██╔═══██╗│\n" + //
+                           "│    ██║   ██████╔╝██║   ██║██║     ██║   ██║│\n" + //
+                           "│    ██║   ██╔══██╗██║   ██║██║     ██║   ██║│\n" + //
+                           "│    ██║   ██║  ██║╚██████╔╝╚██████╗╚██████╔╝│\n" + //
+                           "│    ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝ │\n" + //
+                           "└────────────────────────────────────────────┘\n");
+
+        while (pontuacaoJog < 12 && pontuacaoPc < 12) {
+            cartasBaralho = incicializarMatriz(cartasBaralho, true);
+
             cartasJog = distribuirCartas(cartasJog, cartasBaralho);
             cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
 
@@ -40,6 +54,38 @@ public class Truco {
             cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
 
         }
+    }
+
+    public static void setColor(int cor) {
+        String s = "[0m";
+        switch (cor) {
+            case 0:
+                s = "[30m";// preto
+                break;
+            case 1:
+                s = "[31m";// vermelho
+                break;
+            case 2:
+                s = "[32m";// verde
+                break;
+            case 3:
+                s = "[303m";// amarelo
+                break;
+            case 4:
+                s = "[34m";// azul
+                break;
+            case 5:
+                s = "[35m";// magenta
+                break;
+            case 6:
+                s = "[36m";// ciano
+                break;
+            case 7:
+                s = "[97m";// branco
+                break;
+        }
+
+        System.out.print((char) 27 + s);
     }
 
     public static int[][] virarCarta(int[][] cartaVira, boolean[][] cartasBaralho) {
@@ -62,7 +108,7 @@ public class Truco {
     }
 
     public static boolean[][] marcarCartasDistribuidas(int[][] cartas, boolean[][] cartasBaralho) {
-        for (int i = 0; i < cartas[0].length; i++) {
+        for (int i = 0; i < cartas.length; i++) {
             cartasBaralho[cartas[i][0]][cartas[i][1]] = false;
         }
         return cartasBaralho;
