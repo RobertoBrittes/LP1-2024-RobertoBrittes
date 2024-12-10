@@ -10,7 +10,7 @@ public class Truco {
         int pontuacaoPc = 0;
 
         int[][] cartasJog = criarMatrizInt(3, 2);
-        int[][] cartasDupla = criarMatrizInt(3, 2);
+        int[][] cartasDuo = criarMatrizInt(3, 2);
 
         int[][] cartasPc1 = criarMatrizInt(3, 2);
         int[][] cartasPc2 = criarMatrizInt(3, 2);
@@ -18,19 +18,60 @@ public class Truco {
         boolean[][] cartasBaralho = criarMatrizBool(10, 4);
         cartasBaralho = incicializarMatriz(cartasBaralho, true);
 
-        cartasJog = distribuirCartas(cartasJog);
+        int[] cartaFazendo = criarVetorInt(2);
+        int[] cartaVira = criarVetorInt(2);
 
+        while (pontuacaoJog < 12 || pontuacaoPc < 12) {
+            cartasJog = distribuirCartas(cartasJog, cartasBaralho);
+            cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
+
+            cartasPc1 = distribuirCartas(cartasPc1, cartasBaralho);
+            cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
+
+            cartasDuo = distribuirCartas(cartasDuo, cartasBaralho);
+            cartasBaralho = marcarCartasDistribuidas(cartasDuo, cartasBaralho);
+
+            cartasPc2 = distribuirCartas(cartasPc2, cartasBaralho);
+            cartasBaralho = marcarCartasDistribuidas(cartasPc2, cartasBaralho);
+
+            cartaVira = virarCarta(cartaVira, cartasBaralho);
+            
+        }
     }
 
-    public static int[][] distribuirCartas(int[][] cartas) {
+    public static int[] virarCarta(int[] cartaVira, boolean[][] cartasBaralho) {
+        do {
+            cartaVira[0] = rand.nextInt(10);
+            cartaVira[1] = rand.nextInt(4);
+        } while (!cartasBaralho[cartaVira[0]][cartaVira[1]]);
+        return cartaVira;
+    }
+
+    public static int[] incicializarVetInt(int v, int[] vetInt) {
+        for (int i = 0; i < vetInt.length; i++) {
+            vetInt[i] = v;
+        }
+        return vetInt;
+    }
+
+    public static int[] criarVetorInt(int n) {
+        return new int[n];
+    }
+
+    public static boolean[][] marcarCartasDistribuidas(int[][] cartas, boolean[][] cartasBaralho) {
         for (int i = 0; i < cartas[0].length; i++) {
-            for (int j = 0; j < cartas.length; j++) {
-                if (j == 0) {
-                    cartas[i][j] = rand.nextInt(4);
-                } else {
-                    cartas[i][j] = rand.nextInt(10);
-                }
-            }
+            cartasBaralho[cartas[i][0]][cartas[i][1]] = false;
+        }
+        return cartasBaralho;
+    }
+
+    public static int[][] distribuirCartas(int[][] cartas, boolean[][] cartasBaralho) {
+        for (int i = 0; i < cartas.length; i++) {
+            do {
+                cartas[i][0] = rand.nextInt(10);
+                cartas[i][1] = rand.nextInt(4);
+            } while (!cartasBaralho[cartas[i][0]][cartas[i][1]]);
+            cartasBaralho[cartas[i][0]][cartas[i][1]] = false;
         }
         return cartas;
     }
