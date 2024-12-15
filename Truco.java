@@ -6,11 +6,15 @@ public class Truco {
     final static Random rand = new Random();
 
     public static void main(String[] args) {
+        limparTela();
+
         int pontuacaoJog = 0;
         int pontuacaoPc = 0;
 
-        String[] numeroCarta = criarVetorString(10);
+        char[] numeroCarta = criarVetorChar(10);
+        numeroCarta = preencherNumeroCarta(numeroCarta);
         String[] naipeCarta = criarVetorString(4);
+        naipeCarta = preencherNaipeCarta(naipeCarta);
 
         boolean jogarDupla = false;
 
@@ -27,34 +31,45 @@ public class Truco {
 
         int[] cartaFazendo = criarVetorInt(2);
 
+        int[] cartaJogadaJog = criarVetorInt(2);
+        int[] cartaJogadaPc = criarVetorInt(2);
+
+        int rodadaGanhaJog = 0;
+        int rodadaGanhaPc = 0;
+
+        String vencedorRodada = null;
+
         jogarDupla = escolherSeVaiJogarDupla();
 
-        if (jogarDupla) {
-            while (pontuacaoJog < 12 && pontuacaoPc < 12) {
-                limparTela();
-
-                cartasBaralho = incicializarMatriz(cartasBaralho, true);
-
-                cartasJog = distribuirCartas(cartasJog, cartasBaralho);
-                cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
-
-                cartasPc1 = distribuirCartas(cartasPc1, cartasBaralho);
-                cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
-
-                cartasDuo = distribuirCartas(cartasDuo, cartasBaralho);
-                cartasBaralho = marcarCartasDistribuidas(cartasDuo, cartasBaralho);
-
-                cartasPc2 = distribuirCartas(cartasPc2, cartasBaralho);
-                cartasBaralho = marcarCartasDistribuidas(cartasPc2, cartasBaralho);
-
-                // vira a carta para definir os manilhas;
-                cartaVira = virarCarta(cartaVira, cartasBaralho);
-                cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
-
-                imprimirCarta
-            }
-
-        } else {
+        /*
+         * if (jogarDupla) {
+         * while (pontuacaoJog < 12 && pontuacaoPc < 12) {
+         * limparTela();
+         * 
+         * cartasBaralho = incicializarMatriz(cartasBaralho, true);
+         * 
+         * cartasJog = distribuirCartas(cartasJog, cartasBaralho);
+         * cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
+         * 
+         * cartasPc1 = distribuirCartas(cartasPc1, cartasBaralho);
+         * cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
+         * 
+         * cartasDuo = distribuirCartas(cartasDuo, cartasBaralho);
+         * cartasBaralho = marcarCartasDistribuidas(cartasDuo, cartasBaralho);
+         * 
+         * cartasPc2 = distribuirCartas(cartasPc2, cartasBaralho);
+         * cartasBaralho = marcarCartasDistribuidas(cartasPc2, cartasBaralho);
+         * 
+         * // vira a carta para definir os manilhas;
+         * cartaVira = virarCarta(cartaVira, cartasBaralho);
+         * cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
+         * 
+         * imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta);
+         * }
+         * 
+         * } else {
+         */
+        while (pontuacaoJog < 12 && pontuacaoPc < 12) {
             limparTela();
 
             cartasBaralho = incicializarMatriz(cartasBaralho, true);
@@ -68,12 +83,79 @@ public class Truco {
             // vira a carta para definir os manilhas;
             cartaVira = virarCarta(cartaVira, cartasBaralho);
             cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
+
+            for (int i = 0; i < 3; i++) {
+                imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta);
+
+                switch (lerNumInt()) {
+                    case 1:
+                        cartaJogadaJog[0] = cartasJog[0][0];
+                        cartaJogadaJog[1] = cartasJog[0][1];
+                        break;
+                    case 2:
+                        cartaJogadaJog[0] = cartasJog[1][0];
+                        cartaJogadaJog[1] = cartasJog[1][1];
+
+                        break;
+                    case 3:
+                        cartaJogadaJog[0] = cartasJog[2][0];
+                        cartaJogadaJog[1] = cartasJog[2][1];
+                        break;
+                }
+                cartaFazendo[0] = 0;
+                cartaFazendo[1] = 0;
+
+                if (rodadaGanhaJog == 2) {
+                    pontuacaoJog++;
+                }
+                if (rodadaGanhaPc == 2) {
+                    pontuacaoPc++;
+                }
+
+            }
         }
+        // }
+    }
+
+    public static String[] preencherNaipeCarta(String[] naipeCarta) {
+        naipeCarta[0] = "OUROS";
+        naipeCarta[1] = "ESPADAS";
+        naipeCarta[2] = "COPAS";
+        naipeCarta[3] = "PAUS";
+
+        return naipeCarta;
+    }
+
+    public static char[] preencherNumeroCarta(char[] numeroCarta) {
+
+        numeroCarta[0] = '4';
+        numeroCarta[1] = '5';
+        numeroCarta[2] = '6';
+        numeroCarta[3] = '7';
+        numeroCarta[4] = 'Q';
+        numeroCarta[5] = 'J';
+        numeroCarta[6] = 'K';
+        numeroCarta[7] = 'A';
+        numeroCarta[8] = '2';
+        numeroCarta[9] = '3';
+
+        return numeroCarta;
+    }
+
+    public static void imprimirCartaJogador(int[][] cartasJog, char[] numeroCarta, String[] naipeCarta) {
+        System.out.println("Suas cartas:");
+
+        for (int i = 0; i < cartasJog.length; i++) {
+            System.out.println(numeroCarta[cartasJog[i][0]] + " de " + naipeCarta[cartasJog[i][1]]);
+        }
+        System.out.println();
     }
 
     public static void imprimirMenuIni() {
+        gotoXY(0, 30);
         imprimirTruco();
 
+        setColor(-1);
         System.out.println(
                 "Olá, bem vindo ao jogo de TRUCO\n\nEscolha se deseja jogar em dupla ou individual\n1 - Individual\n2 - Dupla\n");
     }
@@ -124,6 +206,11 @@ public class Truco {
         }
         System.out.print("\033\143");
 
+    }
+
+    public static void gotoXY(int linha, int coluna) {
+        char escCode = 0x1B;
+        System.out.print(String.format("%c[%d;%df", escCode, linha, coluna));
     }
 
     public static void setColor(int cor) {
@@ -179,6 +266,10 @@ public class Truco {
 
     public static String[] criarVetorString(int n) {
         return new String[n];
+    }
+
+    public static char[] criarVetorChar(int n) {
+        return new char[n];
     }
 
     public static boolean[][] marcarCartasDistribuidas(int[][] cartas, boolean[][] cartasBaralho) {
