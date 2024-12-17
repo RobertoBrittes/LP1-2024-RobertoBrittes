@@ -64,6 +64,9 @@ public class Truco {
             cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
 
             while (rodadaGanhaJog < 2 && rodadaGanhaPc < 2) {
+                setColor(6);
+                imprimirPlacarRodadaPorRodada(rodadaGanhaJog, rodadaGanhaPc, pontuacaoJog, pontuacaoPc);
+
                 imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta, cartaDiponivelJog);
                 setColor(-1);
 
@@ -137,6 +140,26 @@ public class Truco {
 
             }
         }
+        
+    }
+
+    public static void imprimirPlacar(int pontuacaoJog, int pontuacaoPc) {
+        System.out.println();
+        System.out.println("Pontuação - Tempos");
+        System.out.println("Jogador X Computador\n" + //
+                "   " + pontuacaoJog + "          " + pontuacaoPc + "\n");
+
+    }
+
+    public static void imprimirPlacarRodadaPorRodada(int rodadaGanhaJog, int rodadaGanhaPc, int pontuacaoJog, int pontuacaoPc) {
+        System.out.println();
+        System.out.println("Pontuação - Tempos");
+        System.out.println("Jogador X Computador\n" + //
+                "   " + pontuacaoJog + "          " + pontuacaoPc + "\n");
+
+        System.out.println("Pontuação - Rodadas");
+        System.out.println("Jogador X Computador\n" + //
+                "   " + rodadaGanhaJog + "          " + rodadaGanhaPc + "\n");
     }
 
     public static int lerCartaDescarte() {
@@ -217,9 +240,9 @@ public class Truco {
         return numeroCarta;
     }
 
-    public static void imprimirCartaJogador(int[][] cartasJog, char[] numeroCarta, String[] naipeCarta, 
+    public static void imprimirCartaJogador(int[][] cartasJog, char[] numeroCarta, String[] naipeCarta,
             boolean[] cartaDiponivel) {
-        System.out.println("Suas cartas:");
+        System.out.println("Suas cartas:\n");
 
         for (int i = 0; i < cartasJog.length; i++) {
             if (cartaDiponivel[i]) {
@@ -229,7 +252,7 @@ public class Truco {
                 } else {
                     setColor(0);
                 }
-                System.out.println(i + " - " +numeroCarta[cartasJog[i][0]] + " de " + naipeCarta[cartasJog[i][1]]);
+                System.out.println(i + " - " + numeroCarta[cartasJog[i][0]] + " de " + naipeCarta[cartasJog[i][1]]);
             }
         }
         System.out.println();
