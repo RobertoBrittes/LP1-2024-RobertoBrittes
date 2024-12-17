@@ -17,15 +17,17 @@ public class Truco {
         naipeCarta = preencherNaipeCarta(naipeCarta);
 
         int[][] cartasJog = criarMatrizInt(3, 2);
+        boolean[] cartaDiponivelJog = criarVetorBool(3);
+        cartaDiponivelJog = incicializarVetBool(true, cartaDiponivelJog);
 
         int[][] cartasPc1 = criarMatrizInt(3, 2);
+        boolean[] cartaDiponivelPc = criarVetorBool(3);
+        cartaDiponivelPc = incicializarVetBool(true, cartaDiponivelPc);
 
         boolean[][] cartasBaralho = criarMatrizBool(10, 4);
         cartasBaralho = incicializarMatriz(cartasBaralho, true);
 
         int[][] cartaVira = criarMatrizInt(1, 2);
-
-        int[] cartaFazendo = criarVetorInt(2);
 
         int[] cartaJogadaJog = criarVetorInt(2);
         int[] cartaJogadaPc = criarVetorInt(2);
@@ -33,87 +35,159 @@ public class Truco {
         int rodadaGanhaJog = 0;
         int rodadaGanhaPc = 0;
 
-        String vencedorRodada = null;
+        int cartaSelecionada = 0;
+
+        String vencedorRodada = "jogador";
+
+        String jogadorNaVez = null;
 
         imprimirMenuIni();
 
         while (pontuacaoJog < 12 && pontuacaoPc < 12) {
             limparTela();
 
+            rodadaGanhaJog = 0;
+            rodadaGanhaPc = 0;
+
             cartasBaralho = incicializarMatriz(cartasBaralho, true);
 
             cartasJog = distribuirCartas(cartasJog, cartasBaralho);
+            cartaDiponivelJog = incicializarVetBool(true, cartaDiponivelJog);
             cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
 
             cartasPc1 = distribuirCartas(cartasPc1, cartasBaralho);
+            cartaDiponivelPc = incicializarVetBool(true, cartaDiponivelPc);
             cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
 
             // vira a carta para definir os manilhas;
             cartaVira = virarCarta(cartaVira, cartasBaralho);
             cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
 
-            for (int i = 0; i < 3; i++) {
-                imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta);
-                if (i == 0) {
+            while (rodadaGanhaJog < 2 && rodadaGanhaPc < 2) {
+                imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta, cartaDiponivelJog);
+                setColor(-1);
+
+                if (vencedorRodada.equals("jogador")) {
+                    jogadorNaVez = "jogador";
+                    do {
+                        cartaSelecionada = lerCartaDescarte();
+                        cartaJogadaJog = jogarCarta(cartaJogadaJog, cartasJog, jogadorNaVez,
+                                cartaDiponivelJog, cartaSelecionada);
+                    } while (!cartaDiponivelJog[cartaSelecionada]);
+                    cartaDiponivelJog[cartaSelecionada] = false;
+                    imprimirCartaJogada(cartaJogadaJog, numeroCarta, naipeCarta,
+                            "Jogador");
+                    setColor(-1);
+
+                    jogadorNaVez = "pc";
+                    do {
+                        cartaSelecionada = randomizarDescarte();
+                        cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
+                                cartaSelecionada);
+                    } while (!cartaDiponivelPc[cartaSelecionada]);
+                    cartaDiponivelPc[cartaSelecionada] = false;
+                    imprimirCartaJogada(cartaJogadaPc, numeroCarta, naipeCarta,
+                            "Pc");
+                    setColor(-1);
 
                 } else {
+                    jogadorNaVez = "pc";
+                    do {
+                        cartaSelecionada = randomizarDescarte();
+                        cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
+                                cartaSelecionada);
+                    } while (!cartaDiponivelPc[cartaSelecionada]);
+                    cartaDiponivelPc[cartaSelecionada] = false;
+                    imprimirCartaJogada(cartaJogadaPc, numeroCarta, naipeCarta,
+                            "Pc");
+                    setColor(-1);
 
-                    cartaFazendo[0] = 0;
-                    cartaFazendo[1] = 0;
-
-                    if (rodadaGanhaJog == 2) {
-                        pontuacaoJog++;
-                    }
-                    if (rodadaGanhaPc == 2) {
-                        pontuacaoPc++;
-                    }
-
+                    jogadorNaVez = "jogador";
+                    do {
+                        cartaSelecionada = lerCartaDescarte();
+                        cartaJogadaJog = jogarCarta(cartaJogadaJog, cartasJog, jogadorNaVez,
+                                cartaDiponivelJog, cartaSelecionada);
+                    } while (!cartaDiponivelJog[cartaSelecionada]);
+                    cartaDiponivelJog[cartaSelecionada] = false;
+                    imprimirCartaJogada(cartaJogadaJog, numeroCarta, naipeCarta,
+                            "Jogador");
+                    setColor(-1);
                 }
+
+                if (cartaJogadaJog[0] > cartaJogadaPc[0]) {
+                    vencedorRodada = "jogador";
+                    rodadaGanhaJog++;
+                } else if (cartaJogadaJog[0] < cartaJogadaPc[0]) {
+                    vencedorRodada = "pc";
+                    rodadaGanhaPc++;
+                } else {
+                    vencedorRodada = "empate";
+                    rodadaGanhaJog++;
+                    rodadaGanhaPc++;
+                }
+
+                if (rodadaGanhaJog == 2) {
+                    pontuacaoJog++;
+                    break;
+                }
+                if (rodadaGanhaPc == 2) {
+                    pontuacaoPc++;
+                    break;
+                }
+
             }
         }
     }
 
-    public static int randomizarDescarte() {
-        int num = 0;
+    public static int lerCartaDescarte() {
+        int n = 0;
         do {
-            num = rand.nextInt(4);
-        } while (num < 1 || num > 3 && num != 0);
-        return num;
+            n = lerNumInt();
+        } while (n < 0 || n > 2);
+        return n;
     }
 
-    public static int[] jogarCartajog(int[] cartaJogada, int[][] cartas, String jogadorNaVez) {
-        if (jogadorNaVez.equals("jogador")) {
-            switch (lerNumInt()) {
-                case 1:
-                    cartaJogada[0] = cartas[0][0];
-                    cartaJogada[1] = cartas[0][1];
-                    break;
-                case 2:
-                    cartaJogada[0] = cartas[1][0];
-                    cartaJogada[1] = cartas[1][1];
-
-                    break;
-                case 3:
-                    cartaJogada[0] = cartas[2][0];
-                    cartaJogada[1] = cartas[2][1];
-                    break;
-            }
+    public static void imprimirCartaJogada(int[] cartaJogada, char[] numeroCarta, String[] naipeCarta,
+            String jogadorNaVez) {
+        System.out.print("Carta do " + jogadorNaVez + ": ");
+        if (cartaJogada[1] == 0 || cartaJogada[1] == 2) {
+            setColor(1);
         } else {
-            switch (lerNumInt()) {
-                case 1:
-                    cartaJogada[0] = cartas[0][0];
-                    cartaJogada[1] = cartas[0][1];
-                    break;
-                case 2:
-                    cartaJogada[0] = cartas[1][0];
-                    cartaJogada[1] = cartas[1][1];
+            setColor(0);
+        }
+        System.out.println(numeroCarta[cartaJogada[0]] + " de " + naipeCarta[cartaJogada[1]]);
+    }
 
-                    break;
-                case 3:
-                    cartaJogada[0] = cartas[2][0];
-                    cartaJogada[1] = cartas[2][1];
-                    break;
-            }
+    public static boolean[] incicializarVetBool(boolean bool, boolean[] vetBool) {
+        for (int i = 0; i < vetBool.length; i++) {
+            vetBool[i] = bool;
+        }
+        return vetBool;
+    }
+
+    public static boolean[] criarVetorBool(int n) {
+        return new boolean[n];
+    }
+
+    public static int randomizarDescarte() {
+        return rand.nextInt(3);
+    }
+
+    public static int[] jogarCarta(int[] cartaJogada, int[][] cartas, String jogadorNaVez, boolean[] cartaDiponivel,
+            int cartaSelecionada) {
+        switch (cartaSelecionada) {
+            case 0:
+                cartaJogada[0] = cartas[0][0];
+                cartaJogada[1] = cartas[0][1];
+                break;
+            case 1:
+                cartaJogada[0] = cartas[1][0];
+                cartaJogada[1] = cartas[1][1];
+                break;
+            case 2:
+                cartaJogada[0] = cartas[2][0];
+                cartaJogada[1] = cartas[2][1];
+                break;
         }
         return cartaJogada;
     }
@@ -143,11 +217,20 @@ public class Truco {
         return numeroCarta;
     }
 
-    public static void imprimirCartaJogador(int[][] cartasJog, char[] numeroCarta, String[] naipeCarta) {
+    public static void imprimirCartaJogador(int[][] cartasJog, char[] numeroCarta, String[] naipeCarta, 
+            boolean[] cartaDiponivel) {
         System.out.println("Suas cartas:");
 
         for (int i = 0; i < cartasJog.length; i++) {
-            System.out.println(numeroCarta[cartasJog[i][0]] + " de " + naipeCarta[cartasJog[i][1]]);
+            if (cartaDiponivel[i]) {
+                if (naipeCarta[cartasJog[i][1]].equals(naipeCarta[0])
+                        || naipeCarta[cartasJog[i][1]].equals(naipeCarta[2])) {
+                    setColor(1);
+                } else {
+                    setColor(0);
+                }
+                System.out.println(i + " - " +numeroCarta[cartasJog[i][0]] + " de " + naipeCarta[cartasJog[i][1]]);
+            }
         }
         System.out.println();
     }
@@ -159,15 +242,6 @@ public class Truco {
         setColor(-1);
         System.out.println(
                 "Olá, bem vindo ao jogo de TRUCO\n");
-    }
-
-    // metodo que verifica se a escolha do jogador é valida
-    public static int lerEscolhaTipoJogo() {
-        int n = 0;
-        do {
-            n = lerNumInt();
-        } while (n > 2 || n < 1);
-        return n;
     }
 
     public static int lerNumInt() {
@@ -212,7 +286,7 @@ public class Truco {
                 s = "[32m";// verde
                 break;
             case 3:
-                s = "[303m";// amarelo
+                s = "[33m";// amarelo
                 break;
             case 4:
                 s = "[34m";// azul
