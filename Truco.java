@@ -1,5 +1,14 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Truco {
     final static Scanner Sc = new Scanner(System.in);
@@ -8,8 +17,7 @@ public class Truco {
     public static void main(String[] args) {
         limparTela();
 
-        int pontuacaoJog = 0;
-        int pontuacaoPc = 0;
+        int[] pontuacaoJogo = criarVetorInt(2);
 
         char[] numeroCarta = criarVetorChar(10);
         numeroCarta = preencherNumeroCarta(numeroCarta);
@@ -27,135 +35,320 @@ public class Truco {
         boolean[][] cartasBaralho = criarMatrizBool(10, 4);
         cartasBaralho = incicializarMatriz(cartasBaralho, true);
 
-        int[][] cartaVira = criarMatrizInt(1, 2);
+        String vencedor = null;
+        String perdedor = null;
 
-        int[] cartaJogadaJog = criarVetorInt(2);
-        int[] cartaJogadaPc = criarVetorInt(2);
+        do {
+            imprimirMenuIni();
+
+            while (pontuacaoJogo[0] < 12 && pontuacaoJogo[1] < 12) {
+                cartasBaralho = incicializarMatriz(cartasBaralho, true);
+
+                cartasJog = distribuirCartas(cartasJog, cartasBaralho);
+                cartaDiponivelJog = incicializarVetBool(true, cartaDiponivelJog);
+                cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
+
+                cartasPc1 = distribuirCartas(cartasPc1, cartasBaralho);
+                cartaDiponivelPc = incicializarVetBool(true, cartaDiponivelPc);
+                cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
+
+                jogarTempo(pontuacaoJogo, cartasJog, cartasPc1, numeroCarta, naipeCarta, cartaDiponivelJog,
+                        cartaDiponivelPc);
+            }
+
+            if (pontuacaoJogo[0] > pontuacaoJogo[1]) {
+                vencedor = "Jogador";
+                perdedor = "Computador";
+            } else {
+                vencedor = "Computador";
+                perdedor = "Jogador";
+            }
+            imprimirVencedor(vencedor, perdedor, pontuacaoJogo);
+
+        } while (pedirSeDesejaJogarNovamente() == 1);
+        imprimirEncerramento();
+
+    }
+
+    public static void imprimirEncerramento() {
+        limparTela();
+        System.out.println("Obrigado por jogar truco, volte sempre!");
+        System.out.print("Desenvolvido por: ");
+        setColor(4);
+        System.out.println("Roberto Brittes Gebauer");
+        setColor(-1);
+        System.out.print("Efeito sonoro do truco feito por: ");
+        setColor(5);
+        System.out.println("Murilo Senchechem(Xenxem)");
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+        setColor(0);
+        System.out.println("Tempo de desenvolvimento: 38h");
+
+    }
+
+    public static int[] jogarTempo(int[] pontuacaoJogo, int[][] cartasJog, int[][] cartasPc1,
+            char[] numeroCarta,
+            String[] naipeCarta, boolean[] cartaDiponivelJog, boolean[] cartaDiponivelPc) {
+
+        String vencedorRodada = "jogador";
+        String jogadorNaVez = "jogador";
 
         int rodadaGanhaJog = 0;
         int rodadaGanhaPc = 0;
 
         int cartaSelecionada = 0;
 
-        String vencedorRodada = "jogador";
+        boolean trucado = false;
 
-        String jogadorNaVez = null;
+        int[] cartaJogadaJog = criarVetorInt(2);
+        int[] cartaJogadaPc = criarVetorInt(2);
 
-        imprimirMenuIni();
+        while (rodadaGanhaJog < 2 && rodadaGanhaPc < 2) {
+            setColor(6);
+            imprimirPlacarRodadaPorRodada(rodadaGanhaJog, rodadaGanhaPc, pontuacaoJogo);
 
-        while (pontuacaoJog < 12 && pontuacaoPc < 12) {
-            limparTela();
+            imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta, cartaDiponivelJog);
+            setColor(-1);
 
-            rodadaGanhaJog = 0;
-            rodadaGanhaPc = 0;
-
-            cartasBaralho = incicializarMatriz(cartasBaralho, true);
-
-            cartasJog = distribuirCartas(cartasJog, cartasBaralho);
-            cartaDiponivelJog = incicializarVetBool(true, cartaDiponivelJog);
-            cartasBaralho = marcarCartasDistribuidas(cartasJog, cartasBaralho);
-
-            cartasPc1 = distribuirCartas(cartasPc1, cartasBaralho);
-            cartaDiponivelPc = incicializarVetBool(true, cartaDiponivelPc);
-            cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
-
-            // vira a carta para definir os manilhas;
-            cartaVira = virarCarta(cartaVira, cartasBaralho);
-            cartasBaralho = marcarCartasDistribuidas(cartaVira, cartasBaralho);
-
-            while (rodadaGanhaJog < 2 && rodadaGanhaPc < 2) {
-                setColor(6);
-                imprimirPlacarRodadaPorRodada(rodadaGanhaJog, rodadaGanhaPc, pontuacaoJog, pontuacaoPc);
-
-                imprimirCartaJogador(cartasJog, numeroCarta, naipeCarta, cartaDiponivelJog);
+            if (vencedorRodada.equals("jogador")) {
+                jogadorNaVez = "jogador";
+                if (trucado == false) {
+                    trucado = pedirTruco(jogadorNaVez);
+                    if (trucado) {
+                        trucado = aceitarCorrerTruco(jogadorNaVez);
+                        if (!trucado) {
+                            pontuacaoJogo[0]++;
+                            vencedorRodada = "jogador";
+                            break;
+                        }
+                    }
+                }
+                do {
+                    cartaSelecionada = lerCartaDescarte();
+                    cartaJogadaJog = jogarCarta(cartaJogadaJog, cartasJog, jogadorNaVez,
+                            cartaDiponivelJog, cartaSelecionada);
+                } while (!cartaDiponivelJog[cartaSelecionada]);
+                cartaDiponivelJog[cartaSelecionada] = false;
+                imprimirCartaJogada(cartaJogadaJog, numeroCarta, naipeCarta,
+                        "Jogador");
                 setColor(-1);
 
-                if (vencedorRodada.equals("jogador")) {
-                    jogadorNaVez = "jogador";
-                    do {
-                        cartaSelecionada = lerCartaDescarte();
-                        cartaJogadaJog = jogarCarta(cartaJogadaJog, cartasJog, jogadorNaVez,
-                                cartaDiponivelJog, cartaSelecionada);
-                    } while (!cartaDiponivelJog[cartaSelecionada]);
-                    cartaDiponivelJog[cartaSelecionada] = false;
-                    imprimirCartaJogada(cartaJogadaJog, numeroCarta, naipeCarta,
-                            "Jogador");
-                    setColor(-1);
-
-                    jogadorNaVez = "pc";
-                    do {
-                        cartaSelecionada = randomizarDescarte();
-                        cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
-                                cartaSelecionada);
-                    } while (!cartaDiponivelPc[cartaSelecionada]);
-                    cartaDiponivelPc[cartaSelecionada] = false;
-                    imprimirCartaJogada(cartaJogadaPc, numeroCarta, naipeCarta,
-                            "Pc");
-                    setColor(-1);
-
-                } else {
-                    jogadorNaVez = "pc";
-                    do {
-                        cartaSelecionada = randomizarDescarte();
-                        cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
-                                cartaSelecionada);
-                    } while (!cartaDiponivelPc[cartaSelecionada]);
-                    cartaDiponivelPc[cartaSelecionada] = false;
-                    imprimirCartaJogada(cartaJogadaPc, numeroCarta, naipeCarta,
-                            "Pc");
-                    setColor(-1);
-
-                    jogadorNaVez = "jogador";
-                    do {
-                        cartaSelecionada = lerCartaDescarte();
-                        cartaJogadaJog = jogarCarta(cartaJogadaJog, cartasJog, jogadorNaVez,
-                                cartaDiponivelJog, cartaSelecionada);
-                    } while (!cartaDiponivelJog[cartaSelecionada]);
-                    cartaDiponivelJog[cartaSelecionada] = false;
-                    imprimirCartaJogada(cartaJogadaJog, numeroCarta, naipeCarta,
-                            "Jogador");
-                    setColor(-1);
+                jogadorNaVez = "pc";
+                if (trucado == false) {
+                    trucado = pedirTruco(jogadorNaVez);
+                    if (trucado) {
+                        trucado = aceitarCorrerTruco(jogadorNaVez);
+                        if (!trucado) {
+                            pontuacaoJogo[1]++;
+                            vencedorRodada = "computador";
+                            break;
+                        }
+                    }
                 }
+                do {
+                    cartaSelecionada = randomizarDescarte();
+                    cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
+                            cartaSelecionada);
+                } while (!cartaDiponivelPc[cartaSelecionada]);
+                cartaDiponivelPc[cartaSelecionada] = false;
+                imprimirCartaJogada(cartaJogadaPc, numeroCarta, naipeCarta,
+                        "Pc");
+                setColor(-1);
 
-                if (cartaJogadaJog[0] > cartaJogadaPc[0]) {
-                    vencedorRodada = "jogador";
-                    rodadaGanhaJog++;
-                } else if (cartaJogadaJog[0] < cartaJogadaPc[0]) {
-                    vencedorRodada = "pc";
-                    rodadaGanhaPc++;
-                } else {
-                    vencedorRodada = "empate";
-                    rodadaGanhaJog++;
-                    rodadaGanhaPc++;
+            } else {
+                jogadorNaVez = "pc";
+                if (trucado == false) {
+                    trucado = pedirTruco(jogadorNaVez);
+                    if (trucado) {
+                        trucado = aceitarCorrerTruco(jogadorNaVez);
+                        if (!trucado) {
+                            pontuacaoJogo[1]++;
+                            vencedorRodada = "computador";
+                            break;
+                        }
+                    }
                 }
+                do {
+                    cartaSelecionada = randomizarDescarte();
+                    cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
+                            cartaSelecionada);
+                } while (!cartaDiponivelPc[cartaSelecionada]);
+                cartaDiponivelPc[cartaSelecionada] = false;
+                imprimirCartaJogada(cartaJogadaPc, numeroCarta, naipeCarta,
+                        "Pc");
+                setColor(-1);
 
-                if (rodadaGanhaJog == 2) {
-                    pontuacaoJog++;
-                    break;
+                jogadorNaVez = "jogador";
+                if (trucado == false) {
+                    trucado = pedirTruco(jogadorNaVez);
+                    if (trucado) {
+                        trucado = aceitarCorrerTruco(jogadorNaVez);
+                        if (!trucado) {
+                            pontuacaoJogo[0]++;
+                            vencedorRodada = "jogador";
+                            break;
+                        }
+                    }
                 }
-                if (rodadaGanhaPc == 2) {
-                    pontuacaoPc++;
-                    break;
-                }
-
+                do {
+                    cartaSelecionada = lerCartaDescarte();
+                    cartaJogadaJog = jogarCarta(cartaJogadaJog, cartasJog, jogadorNaVez,
+                            cartaDiponivelJog, cartaSelecionada);
+                } while (!cartaDiponivelJog[cartaSelecionada]);
+                cartaDiponivelJog[cartaSelecionada] = false;
+                imprimirCartaJogada(cartaJogadaJog, numeroCarta, naipeCarta,
+                        "Jogador");
+                setColor(-1);
             }
+
+            if (cartaJogadaJog[0] > cartaJogadaPc[0]) {
+                vencedorRodada = "jogador";
+                rodadaGanhaJog++;
+            } else if (cartaJogadaJog[0] < cartaJogadaPc[0]) {
+                vencedorRodada = "pc";
+                rodadaGanhaPc++;
+            } else {
+                rodadaGanhaJog++;
+                rodadaGanhaPc++;
+            }
+
+            if (rodadaGanhaJog == 2) {
+                if (trucado) {
+                    pontuacaoJogo[0] += 3;
+                } else {
+                    pontuacaoJogo[0]++;
+                }
+                break;
+            }
+            if (rodadaGanhaPc == 2) {
+                if (trucado) {
+                    pontuacaoJogo[1] += 3;
+                } else {
+                    pontuacaoJogo[1]++;
+                }
+                break;
+            }
+
         }
-        
+        return pontuacaoJogo;
     }
 
-    public static void imprimirPlacar(int pontuacaoJog, int pontuacaoPc) {
+    public static void imprimirVencedor(String vencedor, String perdedor, int[] pontuacaoJogo) {
+        System.out
+                .println(vencedor + " venceu " + perdedor + " pelo placar de:\n" + pontuacaoJogo[0] + " X "
+                        + pontuacaoJogo[1]);
+    }
+
+    public static void definirCorPorNaipe(String naipe) {
+        if (naipe.equals("OUROS") || naipe.equals("COPAS")) {
+            setColor(1); // vermelho
+        } else {
+            setColor(0); // preto
+        }
+    }
+
+    public static int pedirSeDesejaJogarNovamente() {
+        int n = 0;
+        System.out.println("Deseja jogar novamente?\n0 - Não\n1 - Sim");
+        do {
+            n = lerNumInt();
+        } while (n != 0 && n != 1);
+        return n;
+    }
+
+    public static int lerDesejaPedirTruco(String jogadorNaVez) {
+        int n = 0;
+        if (jogadorNaVez.equals("jogador")) {
+            do {
+                n = lerNumInt();
+            } while (n < 0 || n > 1);
+        } else {
+            n = rand.nextInt(2);
+        }
+        return n;
+    }
+
+    public static void imprimirEsolhaPedirTruco() {
+        System.out.println("Deseja trucar?\n0 - Não\n1 - Sim\n");
+    }
+
+    public static boolean pedirTruco(String jogadorNaVez) {
+        boolean trucado = false;
+        if (jogadorNaVez.equals("jogador")) {
+            imprimirEsolhaPedirTruco();
+        }
+        switch (lerDesejaPedirTruco(jogadorNaVez)) {
+            case 0:
+                trucado = false;
+                break;
+
+            case 1:
+                trucado = true;
+                imprimirTruco();
+                if (rand.nextInt(10) == 3) {
+                    tocarSomTruco();
+                }
+                break;
+        }
+        return trucado;
+    }
+
+    public static void tocarSomTruco() {
+        tocarSom("somTruco.wav");
+    }
+
+    public static void tocarSom(String caminhoArquivoSom) {
+
+        try {
+            // Abrindo o arquivo de som
+            File soundFile = new File(caminhoArquivoSom);
+            if (!soundFile.exists()) {
+                System.out.println("Arquivo de som não encontrado: " + caminhoArquivoSom);
+                return;
+            }
+
+            // Criando um AudioInputStream
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+
+            // Obtendo as informações do formato de áudio
+            AudioFormat format = audioStream.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+
+            // Criando o Clip e carregando o áudio
+            Clip audioClip = (Clip) AudioSystem.getLine(info);
+            audioClip.open(audioStream);
+
+            // Tocando o áudio
+            // System.out.println("Tocando som...");
+            audioClip.start();
+
+            // Mantendo o programa ativo enquanto o som toca
+            Thread.sleep(audioClip.getMicrosecondLength() / 1000);
+
+            // Liberando recursos
+            audioClip.close();
+            audioStream.close();
+            // System.out.println("Som finalizado.");
+        } catch (UnsupportedAudioFileException e) {
+            System.err.println("O formato de áudio não é suportado.");
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            System.err.println("Linha de áudio não disponível.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo de áudio.");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.err.println("O programa foi interrompido.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void imprimirPlacarRodadaPorRodada(int rodadaGanhaJog, int rodadaGanhaPc, int[] pontuacaoJogo) {
         System.out.println();
         System.out.println("Pontuação - Tempos");
         System.out.println("Jogador X Computador\n" + //
-                "   " + pontuacaoJog + "          " + pontuacaoPc + "\n");
-
-    }
-
-    public static void imprimirPlacarRodadaPorRodada(int rodadaGanhaJog, int rodadaGanhaPc, int pontuacaoJog, int pontuacaoPc) {
-        System.out.println();
-        System.out.println("Pontuação - Tempos");
-        System.out.println("Jogador X Computador\n" + //
-                "   " + pontuacaoJog + "          " + pontuacaoPc + "\n");
+                "   " + pontuacaoJogo[0] + "          " + pontuacaoJogo[1] + "\n");
 
         System.out.println("Pontuação - Rodadas");
         System.out.println("Jogador X Computador\n" + //
@@ -173,11 +366,7 @@ public class Truco {
     public static void imprimirCartaJogada(int[] cartaJogada, char[] numeroCarta, String[] naipeCarta,
             String jogadorNaVez) {
         System.out.print("Carta do " + jogadorNaVez + ": ");
-        if (cartaJogada[1] == 0 || cartaJogada[1] == 2) {
-            setColor(1);
-        } else {
-            setColor(0);
-        }
+        definirCorPorNaipe(naipeCarta[cartaJogada[1]]);
         System.out.println(numeroCarta[cartaJogada[0]] + " de " + naipeCarta[cartaJogada[1]]);
     }
 
@@ -246,12 +435,7 @@ public class Truco {
 
         for (int i = 0; i < cartasJog.length; i++) {
             if (cartaDiponivel[i]) {
-                if (naipeCarta[cartasJog[i][1]].equals(naipeCarta[0])
-                        || naipeCarta[cartasJog[i][1]].equals(naipeCarta[2])) {
-                    setColor(1);
-                } else {
-                    setColor(0);
-                }
+                definirCorPorNaipe(naipeCarta[cartasJog[i][1]]);
                 System.out.println(i + " - " + numeroCarta[cartasJog[i][0]] + " de " + naipeCarta[cartasJog[i][1]]);
             }
         }
@@ -259,7 +443,6 @@ public class Truco {
     }
 
     public static void imprimirMenuIni() {
-        gotoXY(0, 30);
         imprimirTruco();
 
         setColor(-1);
@@ -289,11 +472,6 @@ public class Truco {
         }
         System.out.print("\033\143");
 
-    }
-
-    public static void gotoXY(int linha, int coluna) {
-        char escCode = 0x1B;
-        System.out.print(String.format("%c[%d;%df", escCode, linha, coluna));
     }
 
     public static void setColor(int cor) {
@@ -326,14 +504,6 @@ public class Truco {
         }
 
         System.out.print((char) 27 + s);
-    }
-
-    public static int[][] virarCarta(int[][] cartaVira, boolean[][] cartasBaralho) {
-        do {
-            cartaVira[0][0] = rand.nextInt(10);
-            cartaVira[0][1] = rand.nextInt(4);
-        } while (!cartasBaralho[cartaVira[0][0]][cartaVira[0][1]]);
-        return cartaVira;
     }
 
     public static int[] incicializarVetInt(int v, int[] vetInt) {
@@ -388,6 +558,35 @@ public class Truco {
             }
         }
         return matriz;
+    }
+
+    public static boolean aceitarCorrerTruco(String jogadorNaVez) {
+        boolean trucado = false;
+        if (jogadorNaVez.equals("jogador")) {
+            if (rand.nextInt(2) == 1) {
+                trucado = true;
+                System.out.println("Computador aceitou o truco\n");
+            } else {
+                System.out.println("Computador correu...");
+                trucado = false;
+            }
+        } else {
+            System.out.println("Computador trucou, deseja aceitar?\n0 - Não\n1 - Sim\n");
+            if (lerAceitarOuCorrer() == 1) {
+                trucado = true;
+            } else {
+                trucado = false;
+            }
+        }
+        return trucado;
+    }
+
+    public static int lerAceitarOuCorrer() {
+        int n = 0;
+        do {
+            n = lerNumInt();
+        } while (n < 0 || n > 1);
+        return n;
     }
 
 }
