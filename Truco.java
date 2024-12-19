@@ -17,10 +17,10 @@ public class Truco {
     public static void main(String[] args) {
         limparTela();
 
-        int[] pontuacaoJogo = criarVetorInt(2);
+        int[] pontuacaoJogo = criarVetorInt(2); // indice 0, é a pontuacão do jogador, indice 1 do computador
 
         char[] numeroCarta = criarVetorChar(10);
-        numeroCarta = preencherNumeroCarta(numeroCarta);
+        numeroCarta = preencherCaractereCarta(numeroCarta);
         String[] naipeCarta = criarVetorString(4);
         naipeCarta = preencherNaipeCarta(naipeCarta);
 
@@ -52,7 +52,7 @@ public class Truco {
                 cartaDiponivelPc = incicializarVetBool(true, cartaDiponivelPc);
                 cartasBaralho = marcarCartasDistribuidas(cartasPc1, cartasBaralho);
 
-                jogarTempo(pontuacaoJogo, cartasJog, cartasPc1, numeroCarta, naipeCarta, cartaDiponivelJog,
+                jogarTento(pontuacaoJogo, cartasJog, cartasPc1, numeroCarta, naipeCarta, cartaDiponivelJog,
                         cartaDiponivelPc);
             }
 
@@ -80,13 +80,13 @@ public class Truco {
         System.out.print("Efeito sonoro do truco feito por: ");
         setColor(5);
         System.out.println("Murilo Senchechem(Xenxem)");
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("\n\n\n\n\n\n\n\n\n\n");
         setColor(0);
         System.out.println("Tempo de desenvolvimento: 38h");
 
     }
 
-    public static int[] jogarTempo(int[] pontuacaoJogo, int[][] cartasJog, int[][] cartasPc1,
+    public static int[] jogarTento(int[] pontuacaoJogo, int[][] cartasJog, int[][] cartasPc1,
             char[] numeroCarta,
             String[] naipeCarta, boolean[] cartaDiponivelJog, boolean[] cartaDiponivelPc) {
 
@@ -169,7 +169,7 @@ public class Truco {
                     }
                 }
                 do {
-                    cartaSelecionada = randomizarDescarte();
+                    cartaSelecionada = rand.nextInt(3);
                     cartaJogadaPc = jogarCarta(cartaJogadaPc, cartasPc1, jogadorNaVez, cartaDiponivelPc,
                             cartaSelecionada);
                 } while (!cartaDiponivelPc[cartaSelecionada]);
@@ -239,6 +239,7 @@ public class Truco {
                         + pontuacaoJogo[1]);
     }
 
+    // define a cor que a carta vai ser impressa
     public static void definirCorPorNaipe(String naipe) {
         if (naipe.equals("OUROS") || naipe.equals("COPAS")) {
             setColor(1); // vermelho
@@ -346,7 +347,7 @@ public class Truco {
 
     public static void imprimirPlacarRodadaPorRodada(int rodadaGanhaJog, int rodadaGanhaPc, int[] pontuacaoJogo) {
         System.out.println();
-        System.out.println("Pontuação - Tempos");
+        System.out.println("Pontuação - Tentos");
         System.out.println("Jogador X Computador\n" + //
                 "   " + pontuacaoJogo[0] + "          " + pontuacaoJogo[1] + "\n");
 
@@ -404,6 +405,7 @@ public class Truco {
         return cartaJogada;
     }
 
+    // brute force para colocar os naipes no vetor
     public static String[] preencherNaipeCarta(String[] naipeCarta) {
         naipeCarta[0] = "OUROS";
         naipeCarta[1] = "ESPADAS";
@@ -413,7 +415,8 @@ public class Truco {
         return naipeCarta;
     }
 
-    public static char[] preencherNumeroCarta(char[] numeroCarta) {
+    // brute force para colocar o caractere da carta no vetor
+    public static char[] preencherCaractereCarta(char[] numeroCarta) {
 
         numeroCarta[0] = '4';
         numeroCarta[1] = '5';
